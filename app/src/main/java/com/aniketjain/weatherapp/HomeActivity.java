@@ -59,7 +59,6 @@ public class HomeActivity extends AppCompatActivity {
     private int condition;
     private long update_time, sunset, sunrise;
     private String city = "";
-    private final int REQUEST_CODE_EXTRA_INPUT = 101;
     private ActivityHomeBinding binding;
 
     @Override
@@ -86,19 +85,6 @@ public class HomeActivity extends AppCompatActivity {
         // getting data using internet connection
         getDataUsingNetwork();
 
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_EXTRA_INPUT) {
-            if (resultCode == RESULT_OK && data != null) {
-                ArrayList<String> arrayList = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                binding.layout.cityEt.setText(Objects.requireNonNull(arrayList).get(0).toUpperCase());
-                searchCity(binding.layout.cityEt.getText().toString());
-            }
-        }
     }
 
 
@@ -145,19 +131,7 @@ public class HomeActivity extends AppCompatActivity {
             Log.i("refresh", "Refresh Done.");
             binding.mainRefreshLayout.setRefreshing(false);  //for the next time
         });
-        //Mic Search
-        binding.layout.micSearchId.setOnClickListener(view -> {
-            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, Locale.getDefault());
-            intent.putExtra(RecognizerIntent.EXTRA_PROMPT, REQUEST_CODE_EXTRA_INPUT);
-            try {
-                //it was deprecated but still work
-                startActivityForResult(intent, REQUEST_CODE_EXTRA_INPUT);
-            } catch (Exception e) {
-                Log.d("Error Voice", "Mic Error:  " + e);
-            }
-        });
+
     }
 
     private void setRefreshLayoutColor() {
